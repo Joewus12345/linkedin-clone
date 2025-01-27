@@ -1,3 +1,4 @@
+import FollowersFollowing from "@/components/FollowersFollowing";
 import PostFeed from "@/components/PostFeed";
 import PostForm from "@/components/PostForm";
 import UserInformation from "@/components/UserInformation";
@@ -18,6 +19,13 @@ export default async function Home() {
       <section className="md:inline md:col-span-2 md:order-1">
         {/* UserInformation */}
         <UserInformation posts={posts} />
+
+        <hr className="mb-2 border-gray-300 md:mr-6" />
+
+        {/* Followers and Following */}
+        <SignedIn>
+          <FollowersFollowing />
+        </SignedIn>
       </section>
 
       <hr className="mb-2 border-gray-300 md:hidden" />

@@ -46,7 +46,7 @@ export default async function createPostAction(formData: FormData) {
       // Create repost in the database
       const body: AddPostRequestBody = {
         user: userDB,
-        text: `REPOSTED: ${originalPost.text}`, // Add "Repost:" prefix
+        text: `REPOSTED:\n${originalPost.text}`, // Add "Repost:" prefix
         imageUrl: originalPost.imageUrl || undefined, // Reuse image
       };
 

@@ -70,7 +70,7 @@ function Post({ post }: { post: IPostDocument }) {
       </div>
 
       <div>
-        <p className="px-4 pb-2 mt-2">{post.text}</p>
+        <p className="px-4 pb-2 mt-2 whitespace-pre-wrap">{post.text}</p>
 
         {/* If image uploaded put it here... */}
         {post.imageUrl && (
