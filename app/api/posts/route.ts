@@ -34,11 +34,16 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await connectDB(); // Connect to the database
 
-    const posts = await Post.getAllPosts();
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("user_id");
+
+    const filter = userId ? { "user.userId": userId } : {};
+
+    const posts = await Post.find(filter).sort({ createdAt: -1 }).lean();
 
     return NextResponse.json(posts);
   } catch (error) {

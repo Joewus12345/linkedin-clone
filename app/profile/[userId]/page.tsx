@@ -8,6 +8,7 @@ async function ProfilePage({ params }: { params: Promise<{ userId: IUser["userId
 
   if (!userId) {
     toast.error("User ID is required 1");
+    return null;
   }
 
   return <ProfileContent userId={userId} />;

@@ -16,7 +16,8 @@ interface IProfile {
   lastName: string;
   postCount: number;
   commentCount: number;
-  isFollowing: boolean;
+  followersCount: number;
+  followingCount: number;
 }
 
 interface IPost {
@@ -42,10 +43,6 @@ export default function ProfilePage({ userId }: { userId: IUser["userId"] }) {
   }, [isLoaded, userId]);
 
   const fetchUserProfile = async (userId: string) => {
-    if (!userId) {
-      toast.error("User ID is missing");
-      router.push("/");
-    }
     try {
       const response = await fetch(`/api/user-profile?user_id=${userId}`);
       const data = await response.json();
@@ -141,6 +138,9 @@ export default function ProfilePage({ userId }: { userId: IUser["userId"] }) {
           <h1 className="text-xl font-bold">{profile.firstName} {profile.lastName}</h1>
           <p className="text-sm text-gray-500">
             {profile.postCount} Posts • {profile.commentCount} Comments
+          </p>
+          <p className="text-sm text-gray-500">
+            {profile.followersCount} Followers • {profile.followingCount} Following
           </p>
         </div>
       </div>
