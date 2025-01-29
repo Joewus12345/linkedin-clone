@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, Model, models } from "mongoose";
+import { toast } from "sonner";
 
 export interface IFollowersBase {
   follower: string;
@@ -55,6 +56,7 @@ FollowersSchema.statics.follow = async function (
     const existingFollow = await this.findOne({ follower, following });
 
     if (existingFollow) {
+      toast.error("You are already following this user");
       throw new Error("You are already following this user");
     }
 
