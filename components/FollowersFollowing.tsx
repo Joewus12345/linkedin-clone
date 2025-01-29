@@ -29,7 +29,8 @@ function FollowersFollowing() {
       if (response.ok) {
         setFollowers(data);
       } else {
-        toast.error(data.error || "Failed to fetch followers");
+        toast.error("Failed to fetch followers");
+        console.error(data.error);
       }
     } catch (error) {
       toast.error("An error occurred while fetching followers");
@@ -48,7 +49,8 @@ function FollowersFollowing() {
       if (response.ok) {
         setFollowing(data);
       } else {
-        toast.error(data.error || "Failed to fetch following");
+        toast.error("Failed to fetch following");
+        console.error(data.error);
       }
     } catch (error) {
       toast.error("An error occurred while fetching following");
@@ -79,7 +81,8 @@ function FollowersFollowing() {
         toast.success("Unfollowed successfully");
         fetchFollowing(user.id);
       } else {
-        toast.error(data.error || "Failed to unfollow user");
+        toast.error("Failed to unfollow user");
+        console.error(data.error);
       }
     } catch (error) {
       toast.error("An error occurred while unfollowing user");
@@ -101,10 +104,11 @@ function FollowersFollowing() {
               <Avatar>
                 <AvatarImage src={follower.followerImage || "/default-avatar.png"} />
                 <AvatarFallback>
-                  {follower.followerName?.charAt(0)}
+                  {follower.followerFirstName?.charAt(0)}
+                  {follower.followerLastName?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-              <p>{follower.followerName}</p>
+              <p>{`${follower.followerFirstName} ${follower.followerLastName}`}</p>
             </div>
           ))
         ) : (
@@ -116,16 +120,15 @@ function FollowersFollowing() {
         <h4 className="font-medium text-gray-700 text-center">Following</h4>
         {following.length > 0 ? (
           following.map((followed: Following) => (
-            <div key={followed.following} className="flex items-center justify-between py-2">
-              <div className="flex items-center space-x-4">
-                <Avatar>
-                  <AvatarImage src={followed.followingImage || "/default-avatar.png"} />
-                  <AvatarFallback>
-                    {followed.followingName?.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                <p>{followed.followingName}</p>
-              </div>
+            <div key={followed.following} className="flex flex-wrap items-center space-x-4 py-2 justify-center">
+              <Avatar>
+                <AvatarImage src={followed.followingImage || "/default-avatar.png"} />
+                <AvatarFallback>
+                  {followed.followingFirstName?.charAt(0)}
+                  {followed.followingLastName?.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <p>{`${followed.followingFirstName} ${followed.followingLastName}`}</p>
               <Button
                 variant="outline"
                 onClick={() => handleUnfollow(followed.following)}

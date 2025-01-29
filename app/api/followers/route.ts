@@ -1,5 +1,7 @@
 import connectDB from "@/mongodb/db";
 import { Followers } from "@/mongodb/models/followers";
+import { Post } from "@/mongodb/models/post";
+import { IUser } from "@/types/user";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
@@ -23,7 +25,10 @@ export async function GET(request: Request) {
     const followers = await Followers.getAllFollowers(user_id);
 
     if (!followers) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "No followers found" },
+        { status: 200 }
+      );
     }
 
     return NextResponse.json(followers);
@@ -42,17 +47,46 @@ export interface FollowerRequestBody {
 
 // POST function is used to add a follower to a user
 export async function POST(request: Request) {
-  const { followerUserId, followingUserId }: FollowerRequestBody =
-    await request.json();
   try {
     await connectDB();
+    const { followerUserId, followingUserId }: FollowerRequestBody =
+      await request.json();
 
-    const follow = await Followers.follow(followerUserId, followingUserId);
+    // Validate input
+    if (!followerUserId || !followingUserId) {
+      return NextResponse.json(
+        { error: "Follower ID or Following ID not provided" },
+        { status: 400 }
+      );
+    }
+
+    // Fetch user details from Post collection
+    const followerData = await Post.findOne(
+      { "user.userId": followerUserId },
+      "user"
+    ).lean();
+    const followingData = await Post.findOne(
+      { "user.userId": followingUserId },
+      "user"
+    ).lean();
+
+    if (!followerData || !followingData) {
+      return NextResponse.json(
+        { error: "User data not found for follower or following" },
+        { status: 404 }
+      );
+    }
+
+    const follower: IUser = followerData.user;
+    const following: IUser = followingData.user;
+
+    // Add follower relationship
+    const follow = await Followers.follow(follower, following);
 
     if (!follow) {
       return NextResponse.json(
         { error: "Follow action failed" },
-        { status: 404 }
+        { status: 400 }
       );
     }
 
@@ -67,11 +101,10 @@ export async function POST(request: Request) {
 
 // DELETE function is used to remove a follower from a user
 export async function DELETE(request: Request) {
-  const { followerUserId, followingUserId }: FollowerRequestBody =
-    await request.json();
-
   try {
     await connectDB();
+    const { followerUserId, followingUserId }: FollowerRequestBody =
+      await request.json();
 
     if (!followerUserId || !followingUserId) {
       return NextResponse.json(
@@ -81,8 +114,8 @@ export async function DELETE(request: Request) {
     }
 
     const follow = await Followers.findOne({
-      follower: followerUserId,
-      following: followingUserId,
+      "follower.userId": followerUserId,
+      "following.userId": followingUserId,
     });
 
     if (!follow) {

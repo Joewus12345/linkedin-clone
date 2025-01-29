@@ -7,12 +7,14 @@ export interface IUser {
 
 export interface Follower {
   follower: string;
-  followerName: string;
+  followerFirstName: string;
+  followerLastName: string;
   followerImage?: string;
 }
 
 export interface Following {
   following: string;
-  followingName: string;
+  followingFirstName: string;
+  followingLastName: string;
   followingImage?: string;
 }
