@@ -8,7 +8,7 @@ export interface UnlikePostRequestBody {
 
 export async function POST(
   request: Request,
-  { params }: { params: { post_id: string } }
+  { params }: { params: Promise<{ post_id: string }> }
 ) {
   await connectDB();
   const { post_id } = await params;

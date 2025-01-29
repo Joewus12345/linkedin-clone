@@ -67,7 +67,7 @@ function Header() {
           <p className="text-xs">Home</p>
         </Link>
 
-        <Link href="/" className="icon">
+        <Link href="/network" className="icon">
           <UsersIcon className="h-5" />
           <p className="text-xs">Network</p>
         </Link>

@@ -9,7 +9,7 @@ import { Post } from "@/mongodb/models/post";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 
-async function PostPage({ params }: { params: { postId: string } }) {
+async function PostPage({ params }: { params: Promise<{ postId: string }> }) {
   // Protect the route with Clerk authentication
   // auth.protect(); 
   const { postId } = await params;

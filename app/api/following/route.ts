@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     const followers = await Followers.getAllFollowing(user_id);
 
     if (!followers) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "User not found" }, { status: 200 });
     }
 
     return NextResponse.json(followers);

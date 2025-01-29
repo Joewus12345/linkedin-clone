@@ -83,7 +83,7 @@ function PostForm() {
             onChange={handleImageChange}
           />
 
-          <button type="submit" hidden>
+          <button type="submit">
             Post
           </button>
         </div>

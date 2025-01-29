@@ -21,7 +21,6 @@ function FollowersFollowing() {
   }, [user]);
 
   const fetchFollowers = async (userId: string) => {
-    if (!user) return;
     try {
       setIsLoading(true);
       const response = await fetch(`/api/followers?user_id=${userId}`);
@@ -41,7 +40,6 @@ function FollowersFollowing() {
   };
 
   const fetchFollowing = async (userId: string) => {
-    if (!user) return;
     try {
       setIsLoading(true);
       const response = await fetch(`/api/following?user_id=${userId}`);

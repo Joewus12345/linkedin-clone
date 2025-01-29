@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  { params }: { params: { post_id: string } }
+  { params }: { params: Promise<{ post_id: string }> }
 ) {
   await connectDB(); // Connect to the database
   const { post_id } = await params;
@@ -26,13 +26,13 @@ export async function GET(
   }
 }
 
-export async function GETBYID(
+export async function HEAD(
   request: Request,
-  { params }: { params: { post_id: string } }
+  { params }: { params: Promise<{ post_id: string }> }
 ) {
   try {
     await connectDB(); // Ensure the database is connected
-    const { post_id } = params;
+    const { post_id } = await params;
 
     if (!post_id) {
       return NextResponse.json(
@@ -59,7 +59,7 @@ export interface DeletePostRequestBody {
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { post_id: string } }
+  { params }: { params: Promise<{ post_id: string }> }
 ) {
   auth.protect(); // Protect the route with Clerk authentication
   const { post_id } = await params;

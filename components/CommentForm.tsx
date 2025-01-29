@@ -5,6 +5,7 @@ import { useRef } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { createCommentAction } from "@/actions/createCommentAction"
 import { toast } from "sonner"
+import { LucideSendHorizontal } from "lucide-react"
 
 function CommentForm({ postId }: { postId: string }) {
   const { user } = useUser()
@@ -57,8 +58,8 @@ function CommentForm({ postId }: { postId: string }) {
           placeholder="Add a comment..."
           className="outline-none flex-1 text-sm bg-transparent"
         />
-        <button type="submit" hidden>
-          Post
+        <button type="submit">
+          <LucideSendHorizontal size={16} />
         </button>
       </div>
     </form>
