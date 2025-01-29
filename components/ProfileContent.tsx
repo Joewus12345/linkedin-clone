@@ -32,7 +32,7 @@ export default function ProfilePage({ userId }: { userId: IUser["userId"] }) {
   const router = useRouter();
   const [profile, setProfile] = useState<IProfile | null>(null);
   const [posts, setPosts] = useState<IPost[]>([]);
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState<boolean>();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -40,6 +40,7 @@ export default function ProfilePage({ userId }: { userId: IUser["userId"] }) {
       fetchUserProfile(userId);
       fetchUserPosts(userId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, userId]);
 
   const fetchUserProfile = async (userId: string) => {
@@ -77,6 +78,12 @@ export default function ProfilePage({ userId }: { userId: IUser["userId"] }) {
   };
 
   const handleFollow = async () => {
+    if (!profile) return;
+
+    // Immediately update state
+    setIsFollowing(true);
+    setProfile((prevProfile) => prevProfile ? { ...prevProfile, followersCount: prevProfile.followersCount + 1 } : null);
+
     try {
       const response = await fetch(`/api/followers`, {
         method: "POST",
@@ -88,17 +95,32 @@ export default function ProfilePage({ userId }: { userId: IUser["userId"] }) {
       });
 
       if (response.ok) {
-        setIsFollowing(true);
         toast.success(`You are now following ${profile?.firstName}`);
+
+        // Re-fetch profile to update followers count
+        fetchUserProfile(userId)
       } else {
         toast.error("Failed to follow user");
+        setIsFollowing(false); // Revert back to previous state if API call fails
       }
     } catch (error) {
       console.error("Error following user:", error);
+      toast.error("An error occurred while following the user.");
+      setIsFollowing(false);
     }
   };
 
   const handleUnfollow = async () => {
+    if (!profile) return;
+
+    // Immediately update state
+    setIsFollowing(false);
+    setProfile((prevProfile) =>
+      prevProfile
+        ? { ...prevProfile, followersCount: Math.max(prevProfile.followersCount - 1, 0) }
+        : null
+    );
+
     try {
       const response = await fetch(`/api/followers`, {
         method: "DELETE",
@@ -110,13 +132,18 @@ export default function ProfilePage({ userId }: { userId: IUser["userId"] }) {
       });
 
       if (response.ok) {
-        setIsFollowing(false);
         toast.success(`You unfollowed ${profile?.firstName}`);
+
+        // Re-fetch profile to update followers count
+        fetchUserProfile(userId)
       } else {
         toast.error("Failed to unfollow user");
+        setIsFollowing(true); // Revert back to previous state if API call fails
       }
     } catch (error) {
       console.error("Error unfollowing user:", error);
+      toast.error("An error occurred while unfollowing the user.");
+      setIsFollowing(true);
     }
   };
 

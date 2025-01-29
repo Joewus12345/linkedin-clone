@@ -18,11 +18,11 @@ export async function GET(request: Request) {
     }
 
     // Fetch the list of users the current user is following
-    const following = await Followers.find({ follower: currentUserId }).select(
-      "following"
-    );
+    const following = await Followers.find({
+      "follower.userId": currentUserId,
+    }).select("following");
 
-    const followingIds = following.map((f) => f.following.toString());
+    const followingIds = following.map((f) => f.following.userId.toString());
 
     // Fetch all users and calculate their post/comment counts
     const users = await Post.aggregate([

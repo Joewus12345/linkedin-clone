@@ -63,11 +63,12 @@ function NetworkPage() {
 
       if (response.ok) {
         // Optimistically update state
-        setUsers((prevUsers) =>
-          prevUsers.map((u) =>
-            u._id === followingUserId ? { ...u, isFollowing: true } : u
-          )
-        );
+        // setUsers((prevUsers) =>
+        //   prevUsers.map((u) =>
+        //     u._id === followingUserId ? { ...u, isFollowing: true } : u
+        //   )
+        // );
+        await fetchUsers(); // Re-fetch user list after following
         toast.success("Followed successfully");
       } else {
         const errorData = await response.json();
@@ -93,11 +94,12 @@ function NetworkPage() {
 
       if (response.ok) {
         // Optimistically update state
-        setUsers((prevUsers) =>
-          prevUsers.map((u) =>
-            u._id === followingUserId ? { ...u, isFollowing: false } : u
-          )
-        );
+        // setUsers((prevUsers) =>
+        //   prevUsers.map((u) =>
+        //     u._id === followingUserId ? { ...u, isFollowing: false } : u
+        //   )
+        // );
+        await fetchUsers(); // Re-fetch user list after unf
         toast.success("Unfollowed successfully");
       } else {
         const errorData = await response.json();
