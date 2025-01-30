@@ -8,7 +8,7 @@ import { Button } from "./ui/button"
 import { useCallback, useRef, useState } from "react"
 import { toast } from "sonner"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 
 // Define the User type
 interface User {
@@ -19,6 +19,7 @@ interface User {
 }
 
 // Debounce function to avoid frequent API calls
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const debounce = <T extends (...args: any[]) => void>(func: T, delay: number) => {
   let timer: NodeJS.Timeout;
   return (...args: Parameters<T>) => {
@@ -29,6 +30,7 @@ const debounce = <T extends (...args: any[]) => void>(func: T, delay: number) =>
 
 function Header() {
   const router = useRouter();
+  const pathname = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<User[]>([]);
@@ -141,25 +143,25 @@ function Header() {
       </div>
 
       <div className="flex items-center space-x-4 px-6">
-        <Link href="/" className="icon hidden sm:flex">
+        <Link href="/" className={`icon hidden sm:flex ${pathname === "/" ? "active" : ""}`}>
           <HomeIcon className="h-5" />
           <p>Home</p>
         </Link>
 
-        <Link href="/network" className="icon hidden sm:flex">
+        <Link href="/network" className={`icon hidden sm:flex ${pathname === "/hidden" ? "active" : ""}`}>
           <UsersIcon className="h-5" />
           <p>Network</p>
         </Link>
 
-        <Link href="/" className="icon hidden sm:flex">
+        <button className="icon hidden sm:flex opacity-50 cursor-not-allowed" disabled>
           <Briefcase className="h-5" />
           <p>Jobs</p>
-        </Link>
+        </button>
 
-        <Link href="/" className="icon hidden sm:flex">
+        <button className="icon hidden sm:flex opacity-50 cursor-not-allowed" disabled>
           <MessagesSquare className="h-5" />
           <p>Messaging</p>
-        </Link>
+        </button>
 
         {/* User Button if signed in */}
         <SignedIn>
@@ -176,25 +178,25 @@ function Header() {
 
       {/* Bottom navigation for Mobile */}
       <div className="fixed bottom-0 left-0 w-full bg-white flex justify-around items-center p-3 border-t border-gray-300 sm:hidden">
-        <Link href="/" className="icon">
+        <Link href="/" className={`icon ${pathname === "/" ? "active" : ""}`}>
           <HomeIcon className="h-5" />
           <p className="text-xs">Home</p>
         </Link>
 
-        <Link href="/network" className="icon">
+        <Link href="/network" className={`icon ${pathname === "/" ? "active" : ""}`}>
           <UsersIcon className="h-5" />
           <p className="text-xs">Network</p>
         </Link>
 
-        <Link href="/" className="icon">
+        <button className="icon opacity-50 cursor-not-allowed" disabled>
           <Briefcase className="h-5" />
           <p className="text-xs">Jobs</p>
-        </Link>
+        </button>
 
-        <Link href="/" className="icon">
+        <button className="icon opacity-50 cursor-not-allowed" disabled>
           <MessagesSquare className="h-5" />
           <p className="text-xs">Messaging</p>
-        </Link>
+        </button>
       </div>
     </div>
   )
