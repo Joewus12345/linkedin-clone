@@ -14,22 +14,22 @@ import {
 
 } from 'react-share';
 
-const ShareButton = ({ url, title }: { url: string, title: string }) => {
+const ShareButton = ({ url }: { url: string }) => {
   return (
     <div className="flex space-x-2 p-3">
-      <FacebookShareButton url={url} title={title}>
+      <FacebookShareButton url={url} >
         <FacebookIcon size={32} round />
       </FacebookShareButton>
-      <TwitterShareButton url={url} title={title}>
+      <TwitterShareButton url={url} >
         <XIcon size={32} round />
       </TwitterShareButton>
-      <LinkedinShareButton url={url} title={title}>
+      <LinkedinShareButton url={url} >
         <LinkedinIcon size={32} round />
       </LinkedinShareButton>
-      <WhatsappShareButton url={url} title={title}>
+      <WhatsappShareButton url={url} >
         <WhatsappIcon size={32} round />
       </WhatsappShareButton>
-      <TelegramShareButton url={url} title={title}>
+      <TelegramShareButton url={url} >
         <TelegramIcon size={32} round />
       </TelegramShareButton>
     </div>

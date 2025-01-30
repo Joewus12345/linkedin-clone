@@ -5,7 +5,7 @@ import { Briefcase, HomeIcon, MessagesSquare, SearchIcon, UsersIcon } from "luci
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "./ui/button"
-import { useCallback, useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import { toast } from "sonner"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { useRouter } from "next/navigation"
@@ -18,21 +18,22 @@ interface User {
   lastName: string;
 }
 
+// Debounce function to avoid frequent API calls
+const debounce = <T extends (...args: any[]) => void>(func: T, delay: number) => {
+  let timer: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => func(...args), delay);
+  };
+};
+
 function Header() {
   const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
-
-  // Debounce function to avoid frequent API calls
-  const debounce = (func: (...args: any[]) => void, delay: number) => {
-    let timer: NodeJS.Timeout;
-    return (...args: any[]) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => func(...args), delay);
-    };
-  };
 
   // Fetch search results
   const fetchSearchResults = async (query: string) => {
@@ -58,7 +59,8 @@ function Header() {
   };
 
   // Debounce search function
-  const handleSearch = useCallback(debounce(fetchSearchResults, 500), []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleSearch = useCallback(debounce(fetchSearchResults, 500), [fetchSearchResults]);
 
   // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +72,14 @@ function Header() {
   // Handle profile navigation
   const handleProfileClick = (userId: string) => {
     setShowDropdown(false); // Close the dropdown
-    router.push(`/profile/${userId}`); // Navigate programmatically
+    setTimeout(() => router.push(`/profile/${userId}`), 100); // Navigate programmatically
+  };
+
+  // Handle blur event for dropdown
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (!dropdownRef.current?.contains(e.relatedTarget)) {
+      setShowDropdown(false);
+    }
   };
 
   return (
@@ -96,7 +105,7 @@ function Header() {
             value={searchTerm}
             onChange={handleInputChange}
             onFocus={() => setShowDropdown(true)}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+            onBlur={handleBlur}
           />
         </form>
 

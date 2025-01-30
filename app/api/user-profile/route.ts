@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 
 // GET user profile details
 export async function GET(request: Request) {
+  auth.protect();
   try {
     await connectDB();
 

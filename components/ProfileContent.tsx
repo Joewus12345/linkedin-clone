@@ -152,42 +152,44 @@ export default function ProfilePage({ userId }: { userId: IUser["userId"] }) {
   if (!profile) return <p className="flex items-center justify-center min-h-screen text-center">User not found</p>;
 
   return (
-    <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg border shadow-md mt-4">
-      <div className="flex items-center space-x-4">
-        <Avatar>
-          <AvatarImage src={profile.userImage || "/default-avatar.png"} />
-          <AvatarFallback>
-            {profile.firstName?.charAt(0)}
-            {profile.lastName?.charAt(0)}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <h1 className="text-xl font-bold">{profile.firstName} {profile.lastName}</h1>
-          <p className="text-sm text-gray-500">
-            {profile.postCount} Posts • {profile.commentCount} Comments
-          </p>
-          <p className="text-sm text-gray-500">
-            {profile.followersCount} Followers • {profile.followingCount} Following
-          </p>
+    <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg border shadow-md mt-4 flex flex-col max-h-[80vh] sm:mb-20 md:mb-0">
+      <div className="p-6 border-b bg-white sticky top-0 z-10">
+        <div className="flex items-center space-x-4">
+          <Avatar>
+            <AvatarImage src={profile.userImage || "/default-avatar.png"} />
+            <AvatarFallback>
+              {profile.firstName?.charAt(0)}
+              {profile.lastName?.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <h1 className="text-xl font-bold">{profile.firstName} {profile.lastName}</h1>
+            <p className="text-sm text-gray-500">
+              {profile.postCount} Posts • {profile.commentCount} Comments
+            </p>
+            <p className="text-sm text-gray-500">
+              {profile.followersCount} Followers • {profile.followingCount} Following
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          {user?.id !== profile.userId && (
+            isFollowing ? (
+              <Button variant="secondary" onClick={handleUnfollow}>
+                Unfollow
+              </Button>
+            ) : (
+              <Button variant="default" onClick={handleFollow}>
+                Follow
+              </Button>
+            )
+          )}
+          <h2 className="text-lg font-semibold mt-4">Recent Posts</h2>
         </div>
       </div>
 
-      <div className="mt-4">
-        {user?.id !== profile.userId && (
-          isFollowing ? (
-            <Button variant="secondary" onClick={handleUnfollow}>
-              Unfollow
-            </Button>
-          ) : (
-            <Button variant="default" onClick={handleFollow}>
-              Follow
-            </Button>
-          )
-        )}
-      </div>
-
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold">Recent Posts</h2>
+      <div className="mt-6 overflow-y-auto flex-1 scrollbar-hide">
         {posts.length > 0 ? (
           posts.map((post) => (
             <div key={post._id} className="mt-3 p-3 border rounded-md">

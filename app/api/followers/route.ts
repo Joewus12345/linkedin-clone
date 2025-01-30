@@ -22,7 +22,16 @@ export async function GET(request: Request) {
       );
     }
 
+    // Count followers and following
+    const followersCount = await Followers.countDocuments({
+      "following.userId": user_id,
+    });
+    const followingCount = await Followers.countDocuments({
+      "follower.userId": user_id,
+    });
+
     const followers = await Followers.getAllFollowers(user_id);
+    const following = await Followers.getAllFollowing(user_id);
 
     if (!followers) {
       return NextResponse.json(
@@ -31,7 +40,12 @@ export async function GET(request: Request) {
       );
     }
 
-    return NextResponse.json(followers);
+    return NextResponse.json({
+      followers,
+      following,
+      followersCount,
+      followingCount,
+    });
   } catch (error) {
     return NextResponse.json(
       { error: `An error occurred while fetching followers ${error}` },

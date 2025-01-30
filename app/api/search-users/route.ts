@@ -3,10 +3,19 @@ import { Post } from "@/mongodb/models/post";
 import { Followers } from "@/mongodb/models/followers";
 import { NextResponse } from "next/server";
 import NodeCache from "node-cache";
+import { auth } from "@clerk/nextjs/server";
+
+interface User {
+  userId: string;
+  firstName?: string;
+  lastName?: string;
+  userImage?: string;
+}
 
 const cache = new NodeCache({ stdTTL: 60 * 5 }); // Cache results for 5 minutes
 
 export async function GET(request: Request) {
+  auth.protect();
   try {
     await connectDB();
 
@@ -86,7 +95,7 @@ export async function GET(request: Request) {
     ]);
 
     // Merge results and remove duplicates
-    const mergedResults = [...postUsers, ...followerUsers].reduce(
+    const mergedResults = [...postUsers, ...followerUsers].reduce<User[]>(
       (acc, user) => {
         if (!acc.some((u) => u.userId === user.userId)) {
           acc.push(user);

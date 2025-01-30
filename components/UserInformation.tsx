@@ -33,9 +33,9 @@ async function UserInformation({ posts }: { posts: IPostDocument[] }) {
 
       <SignedIn>
         <div className="text-center">
-          <p className="font-semibold">
+          <a href={`/profile/${user?.id}`} className="font-semibold hover:underline hover:text-blue-800">
             {firstName} {lastName}
-          </p>
+          </a>
 
           <p className="text-xs">
             @{firstName} {lastName}-{user?.id?.slice(-4)}

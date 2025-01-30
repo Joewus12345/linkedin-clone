@@ -13,6 +13,7 @@ import CommentForm from "./CommentForm"
 import { toast } from "sonner"
 import ShareButton from "./ShareButton"
 import createPostAction from "@/actions/createPostAction"
+import { BASE_URL } from "@/types/user"
 
 function PostOptions({ post }: { post: IPostDocument }) {
   const [isCommentsOpen, setIsCommentsOpen] = useState(false)
@@ -183,7 +184,7 @@ function PostOptions({ post }: { post: IPostDocument }) {
       )}
 
       {isShareOpen && post_id && (
-        <ShareButton url={`http://localhost:3000/posts/${post_id}`} title={post.text} />
+        <ShareButton url={`${BASE_URL}/posts/${post_id}`} />
       )}
     </div>
   )

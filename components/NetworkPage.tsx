@@ -117,9 +117,11 @@ function NetworkPage() {
   }
 
   return (
-    <div className="bg-white p-4 rounded-lg border m-5">
-      <h3 className="text-lg font-semibold text-center items-center">Network</h3>
-      <div className="mt-4 space-y-4">
+    <div className="bg-white p-6 rounded-lg border m-5 max-w-3xl mx-auto sm:mb-20 md:mb-0 flex flex-col max-h-[80vh]">
+      <h3 className="text-xl font-bold items-center border-b sticky top-0 z-10 pb-4">
+        Network
+      </h3>
+      <div className="mt-4 space-y-4 overflow-y-auto flex-1 scrollbar-hide">
         {users.map((u) => (
           <div key={u._id} className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -130,9 +132,9 @@ function NetworkPage() {
                 </AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-medium">
+                <a href={`/profile/${u._id}`} className="font-medium hover:underline hover:text-blue-800">
                   {u.firstName} {u.lastName}
-                </p>
+                </a>
                 <p className="text-sm text-gray-500">
                   Posts: {u.postCount} | Comments: {u.commentCount}
                 </p>
