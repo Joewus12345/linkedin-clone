@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Image from "next/image";
 import { IUserLimited } from "@/mongodb/models/user";
+import PostOptions from "./PostOptions";
+import mongoose from "mongoose";
+import { IPostDocument } from "@/mongodb/models/post";
 
 interface IProfile {
   userId: IUserLimited["userId"];
@@ -21,11 +24,11 @@ interface IProfile {
   isFollowing: boolean;
 }
 
-interface IPost {
-  _id: string;
+interface IPost extends Omit<IPostDocument, "_id"> {
+  _id: mongoose.Types.ObjectId;
   text: string;
   imageUrl?: string;
-  createdAt: string;
+  user: IUserLimited;
 }
 
 export default function ProfilePage({ userId }: { userId: IUserLimited["userId"] }) {
@@ -70,7 +73,23 @@ export default function ProfilePage({ userId }: { userId: IUserLimited["userId"]
       const response = await fetch(`/api/posts?user_id=${userId}`);
       const data = await response.json();
       if (response.ok) {
-        setPosts(data);
+        // Ensure the posts include all fields from IPostDocument
+        const formattedPosts = data.map((post: IPost) => ({
+          ...post,
+          _id: new mongoose.Types.ObjectId(String(post._id)), // Convert string ID back to Mongoose ObjectId
+          createdAt: new Date(post.createdAt).toISOString(), // Ensure correct Date type
+          updatedAt: new Date(post.updatedAt).toISOString(), // Ensure correct Date type
+          user: {
+            userId: post.user?.userId || "",
+            userImage: post.user?.userImage || "",
+            firstName: post.user?.firstName || "",
+            lastName: post.user?.lastName || "",
+          },
+          likes: post.likes || [],
+          comments: post.comments || [],
+        }));
+
+        setPosts(formattedPosts);
       } else {
         toast.error("Failed to fetch user posts");
         console.error(data.error);
@@ -195,10 +214,13 @@ export default function ProfilePage({ userId }: { userId: IUserLimited["userId"]
       <div className="mt-6 overflow-y-auto flex-1 scrollbar-hide">
         {posts.length > 0 ? (
           posts.map((post) => (
-            <div key={post._id} className="mt-3 p-3 border rounded-md">
+            <div key={post._id.toString()} className="mt-3 p-3 border rounded-md">
               <p>{post.text}</p>
               {post.imageUrl && <Image src={post.imageUrl} alt="Post" className="mt-2 rounded-lg" width={500} height={500} />}
               <p className="text-xs text-gray-500 mt-1">{new Date(post.createdAt).toLocaleString()}</p>
+
+              {/* PostOptions */}
+              <PostOptions post={post} />
             </div>
           ))
         ) : (

@@ -44,8 +44,12 @@ export async function GET(request: Request) {
     const filter = userId ? { "user.userId": userId } : {};
 
     const posts = await Post.find(filter).sort({ createdAt: -1 }).lean();
+    const formattedPosts = posts.map((post) => ({
+      ...post,
+      _id: post._id.toString(), // Convert _id to string in API response
+    }));
 
-    return NextResponse.json(posts);
+    return NextResponse.json(formattedPosts);
   } catch (error) {
     return NextResponse.json(
       { error: `An error occured while fetching posts ${error}` },
