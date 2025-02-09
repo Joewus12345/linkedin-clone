@@ -106,11 +106,11 @@ function NetworkPage() {
 
   return (
     <div className="max-w-6xl mx-auto pt-2 px-4 md:pt-2 md:p-5 pb-20">
-      <h3 className="text-2xl font-bold border-b pb-2 text-center">
+      <h3 className="text-2xl font-bold border-b py-2 text-center bg-white">
         Network
       </h3>
 
-      <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3 sm:gap-4">
+      <div className="mt-2 md:mt-6 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3 sm:gap-4">
         {users.map((u) => (
           <div
             key={u._id}

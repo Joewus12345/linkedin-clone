@@ -15,13 +15,14 @@ function FollowersFollowing() {
   const [followersCount, setFollowersCount] = useState<number>(0);
   const [followingCount, setFollowingCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
 
   useEffect(() => {
     if (user?.id) {
       fetchFollowers(user.id);
       fetchFollowing(user.id);
     }
-  }, [user]);
+  }, [user, refreshTrigger]);
 
   const fetchFollowers = async (userId: string) => {
     try {
@@ -30,10 +31,10 @@ function FollowersFollowing() {
       const data = await response.json();
 
       if (response.ok) {
-        setFollowers(data.followers);
-        setFollowing(data.following);
-        setFollowersCount(data.followersCount);
-        setFollowingCount(data.followingCount);
+        setFollowers(data.followers || []);
+        setFollowing(data.following || []);
+        setFollowersCount(data.followersCount || 0);
+        setFollowingCount(data.followingCount || 0);
       } else {
         toast.error("Failed to fetch followers");
         console.error(data.error);
@@ -53,7 +54,8 @@ function FollowersFollowing() {
       const data = await response.json();
 
       if (response.ok) {
-        setFollowing(data);
+        setFollowing(data.following || []);
+        setFollowingCount(data.followingCount || 0);
       } else {
         toast.error("Failed to fetch following");
         console.error(data.error);
@@ -85,7 +87,7 @@ function FollowersFollowing() {
 
       if (response.ok) {
         toast.success("Unfollowed successfully");
-        fetchFollowing(user.id);
+        setRefreshTrigger((prev) => !prev);
       } else {
         toast.error("Failed to unfollow user");
         console.error(data.error);

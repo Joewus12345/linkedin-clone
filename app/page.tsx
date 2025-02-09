@@ -15,7 +15,7 @@ export default async function Home() {
 
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-8 mt-5 sm:px-5">
+    <div className="grid grid-cols-1 md:grid-cols-8 md:mt-5 sm:px-5">
       <section className="md:inline md:col-span-2 md:order-1">
         {/* UserInformation */}
         <UserInformation posts={posts} />

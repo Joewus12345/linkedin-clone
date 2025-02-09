@@ -155,8 +155,8 @@ export default function ProfilePage({ userId }: { userId: IUserLimited["userId"]
   if (!profile) return <p className="flex items-center justify-center min-h-screen text-center">User not found</p>;
 
   return (
-    <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg border shadow-md mt-4 flex flex-col max-h-[80vh] sm:mb-20 md:mb-0">
-      <div className="p-6 border-b bg-white sticky top-0 z-10">
+    <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg border shadow-md md:mt-4 flex flex-col mb-20 md:mb-0">
+      <div className="p-6 border-b bg-white sticky top-10 z-10">
         <div className="flex items-center space-x-4">
           <Avatar>
             <AvatarImage src={profile.userImage || "/default-avatar.png"} />
