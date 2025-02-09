@@ -259,8 +259,7 @@ function Header() {
           <p className="text-xs">Network</p>
         </Link>
 
-        <Link
-          href="/jobs"
+        <Link href="/jobs"
           className={`flex flex-col flex-1 items-center px-4 py-1
             ${pathname === "/jobs" ? "border-b-4 rounded-b-sm border-black text-black" : "text-gray-500 opacity-60"} 
             transition-all duration-300 ease-in-out`}
@@ -269,8 +268,7 @@ function Header() {
           <p className="text-xs">Jobs</p>
         </Link>
 
-        <Link
-          href="/messages"
+        <Link href="/messages"
           className={`flex flex-col flex-1 items-center px-4 py-1 
             ${pathname === "/messages" ? "border-b-4 rounded-b-sm border-black text-black" : "text-gray-500 opacity-60"} 
             transition-all duration-300 ease-in-out`}
@@ -294,25 +292,41 @@ function Header() {
 
       {/* Bottom navigation for Mobile Iteration 1*/}
       <div className="fixed bottom-0 left-0 w-full bg-white flex justify-around items-center p-3 border-t border-gray-300 sm:hidden">
-        <Link href="/" className={`icon ${pathname === "/" ? "active" : ""}`}>
-          <HomeIcon className="h-5" />
+        <Link href="/"
+          className={`flex flex-col flex-1 items-center px-2 pt-2
+            ${pathname === "/" ? "border-t-4 rounded-t-sm border-black text-black" : "text-gray-500 opacity-60"} 
+            transition-all duration-300 ease-in-out `}
+        >
+          <HomeIcon className="h-5 fill-white" />
           <p className="text-xs">Home</p>
         </Link>
 
-        <Link href="/network" className={`icon ${pathname === "/network" ? "active" : ""}`}>
-          <UsersIcon className="h-5" />
+        <Link href="/network"
+          className={`flex flex-col flex-1 items-center px-2 pt-2 
+            ${pathname === "/network" ? "border-t-4 rounded-t-sm border-black text-black" : "text-gray-500 opacity-60"} 
+            transition-all duration-300 ease-in-out`}
+        >
+          <UsersIcon className="h-5 fill-white" />
           <p className="text-xs">Network</p>
         </Link>
 
-        <button className="icon opacity-50 cursor-not-allowed" disabled>
-          <Briefcase className="h-5" />
+        <Link href="/jobs"
+          className={`flex flex-col flex-1 items-center px-2 pt-2
+            ${pathname === "/jobs" ? "border-t-4 rounded-t-sm border-black text-black" : "text-gray-500 opacity-60"} 
+            transition-all duration-300 ease-in-out`}
+        >
+          <Briefcase className="h-5 fill-white" />
           <p className="text-xs">Jobs</p>
-        </button>
+        </Link>
 
-        <button className="icon opacity-50 cursor-not-allowed" disabled>
-          <MessagesSquare className="h-5" />
+        <Link href="/messages"
+          className={`flex flex-col flex-1 items-center px-2 pt-2 
+            ${pathname === "/messages" ? "border-t-4 rounded-t-sm border-black text-black" : "text-gray-500 opacity-60"} 
+            transition-all duration-300 ease-in-out`}
+        >
+          <MessagesSquare className="h-5 fill-white" />
           <p className="text-xs">Messaging</p>
-        </button>
+        </Link>
       </div>
 
       {/* Mobile Navigation - Sheet Component */}
@@ -337,25 +351,41 @@ function Header() {
             <SheetHeader>
               <SheetTitle>LinkedIn</SheetTitle>
             </SheetHeader>
-            <Link href="/" className={`icon ${pathname === "/" ? "active" : ""}`}>
-              <HomeIcon className="h-5" />
+            <Link href="/"
+              className={`flex flex-1 justify-center items-center px-2 py-2
+            ${pathname === "/" ? "border rounded-sm border-black text-black" : "text-gray-500 opacity-60"} 
+            transition-all duration-300 ease-in-out `}
+            >
+              <HomeIcon className="h-5 fill-white" />
               <p className="text-xs">Home</p>
             </Link>
 
-            <Link href="/network" className={`icon ${pathname === "/network" ? "active" : ""}`}>
-              <UsersIcon className="h-5" />
+            <Link href="/network"
+              className={`flex flex-1 justify-center items-center px-2 py-2 
+            ${pathname === "/network" ? "border rounded-sm border-black text-black" : "text-gray-500 opacity-60"} 
+            transition-all duration-300 ease-in-out`}
+            >
+              <UsersIcon className="h-5 fill-white" />
               <p className="text-xs">Network</p>
             </Link>
 
-            <button className="icon opacity-50 cursor-not-allowed" disabled>
-              <Briefcase className="h-5" />
+            <Link href="/jobs"
+              className={`flex flex-1 justify-center items-center px-2 py-2
+            ${pathname === "/jobs" ? "border rounded-sm border-black text-black" : "text-gray-500 opacity-60"} 
+            transition-all duration-300 ease-in-out`}
+            >
+              <Briefcase className="h-5 fill-white" />
               <p className="text-xs">Jobs</p>
-            </button>
+            </Link>
 
-            <button className="icon opacity-50 cursor-not-allowed" disabled>
-              <MessagesSquare className="h-5" />
+            <Link href="/messages"
+              className={`flex flex-1 justify-center items-center px-2 py-2
+            ${pathname === "/messages" ? "border rounded-sm border-black text-black" : "text-gray-500 opacity-60"} 
+            transition-all duration-300 ease-in-out`}
+            >
+              <MessagesSquare className="h-5 fill-white" />
               <p className="text-xs">Messaging</p>
-            </button>
+            </Link>
           </SheetContent>
         </Sheet>
       </div>
