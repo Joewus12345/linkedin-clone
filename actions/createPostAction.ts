@@ -28,7 +28,9 @@ export default async function createPostAction(formData: FormData) {
   try {
     await connectDB();
 
-    const userDB: IUserDocument | null = await User.findOne({ userId: user.id });
+    const userDB: IUserDocument | null = await User.findOne({
+      userId: user.id,
+    });
 
     if (userDB) {
       userDB.userImage = user.imageUrl;
@@ -79,8 +81,8 @@ export default async function createPostAction(formData: FormData) {
           const blockBlobClient = containerClient.getBlockBlobClient(file_name);
 
           const imageBuffer = await image.arrayBuffer();
-          await blockBlobClient.uploadData(imageBuffer);
-          image_url = blockBlobClient.url;
+          const res = await blockBlobClient.uploadData(imageBuffer);
+          image_url = res._response.request.url;
 
           console.log("File uploaded successfully!", image_url);
         } catch (error) {
