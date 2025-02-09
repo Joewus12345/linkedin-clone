@@ -105,7 +105,7 @@ function NetworkPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto pt-2 px-4 md:pt-2 md:p-5 pb-20">
+    <div className="max-w-6xl mx-auto pt-2 px-4 md:pt-2 md:p-5 pb-2">
       <h3 className="text-2xl font-bold border-b py-2 text-center bg-white">
         Network
       </h3>

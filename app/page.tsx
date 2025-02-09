@@ -1,6 +1,7 @@
 import FollowersFollowing from "@/components/FollowersFollowing";
 import PostFeed from "@/components/PostFeed";
 import PostForm from "@/components/PostForm";
+import ScrollToTop from "@/components/ScrollToTop";
 import UserInformation from "@/components/UserInformation";
 import Widget from "@/components/Widget";
 import connectDB from "@/mongodb/db";
@@ -46,6 +47,9 @@ export default async function Home() {
         {/* Widget */}
         <Widget />
       </section>
+
+      {/* Scroll to Top button */}
+      <ScrollToTop />
     </div>
   );
 }
