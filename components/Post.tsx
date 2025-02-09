@@ -11,16 +11,21 @@ import deletePostAction from "@/actions/deletePostAction"
 import Image from "next/image"
 import PostOptions from "./PostOptions"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 function Post({ post }: { post: IPostDocument }) {
   const { user } = useUser()
 
   const isAuthor = user?.id === post.user.userId
+  const router = useRouter()
 
   return (
     <div className="bg-white rounded-lg border">
       <div className="p-4 flex space-x-2">
-        <div>
+        <div
+          className=" cursor-pointer"
+          onClick={() => router.push(`/profile/${post.user.userId}`)}
+        >
           <Avatar>
             <AvatarImage src={post.user.userImage} />
             <AvatarFallback>
@@ -31,7 +36,10 @@ function Post({ post }: { post: IPostDocument }) {
         </div>
 
         <div className="flex justify-between flex-1">
-          <div>
+          <div
+            className=" cursor-pointer"
+            onClick={() => router.push(`/profile/${post.user.userId}`)}
+          >
             <div className="font-semibold">
               {post.user.firstName} {post.user.lastName}{" "}
               {isAuthor && (
