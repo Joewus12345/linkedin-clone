@@ -32,12 +32,6 @@ export default async function createPostAction(formData: FormData) {
       userId: user.id,
     });
 
-    if (userDB) {
-      userDB.userImage = user.imageUrl;
-      userDB.firstName = user.firstName || "";
-      userDB.lastName = user.lastName || "";
-    }
-
     if (!userDB) {
       toast.error("User not found in database");
       throw new Error("User not found in database");
