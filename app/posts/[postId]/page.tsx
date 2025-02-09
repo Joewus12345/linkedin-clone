@@ -25,7 +25,7 @@ async function PostPage({ params }: { params: Promise<{ postId: string }> }) {
   }
 
   return (
-    <div className="bg-white rounded-lg border m-5 max-w-3xl mx-auto">
+    <div className="bg-white rounded-lg border sm:m-5 max-w-3xl sm:mx-auto min-h-screen">
       <div className="p-4 flex space-x-2">
         <div>
           <Avatar>
