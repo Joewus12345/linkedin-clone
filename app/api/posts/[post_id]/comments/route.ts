@@ -12,7 +12,18 @@ export async function GET(
     await connectDB();
     const { post_id } = await params;
 
-    const post = await Post.findById(post_id);
+    const post = await Post.findById(post_id).populate({
+      path: "comments",
+      populate: {
+        path: "user",
+        select: "userId userImage firstName lastName",
+      },
+      options: { sort: { createdAt: -1 } }, // Sort newest first
+    });
+
+    if (!post) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
 
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });

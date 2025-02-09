@@ -94,7 +94,10 @@ PostSchema.methods.getAllComments = async function () {
   try {
     await this.populate({
       path: "comments",
-
+      populate: {
+        path: "user", // Ensure the user field in comments is fully populated
+        select: "userId userImage firstName lastName", // Fetch only necessary fields
+      },
       options: { sort: { createdAt: -1 } }, // sort comments by newest first
     });
     return this.comments;
