@@ -6,7 +6,7 @@ import { Toaster } from "sonner";
 import UserInitializer from "@/components/UserInitializer";
 
 export const metadata: Metadata = {
-  title: "LinkedIn Clone created by @kwadjoe",
+  title: "LinkedIn Clone created by @Kwadjoe",
   description: "A LinkedIn clone built with Next.js, Microsoft Azure and Clerk.",
 };
 

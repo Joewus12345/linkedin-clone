@@ -77,7 +77,10 @@ function Post({ post }: { post: IPostDocument }) {
         </div>
       </div>
 
-      <div>
+      <div
+        className=" cursor-pointer"
+        onClick={() => router.push(`/posts/${post._id}`)}
+      >
         <p className="px-4 pb-2 mt-2 whitespace-pre-wrap">{post.text}</p>
 
         {/* If image uploaded put it here... */}
