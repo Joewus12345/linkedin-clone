@@ -1,7 +1,7 @@
 import connectDB from "@/mongodb/db";
 import { Followers } from "@/mongodb/models/followers";
 import { Post } from "@/mongodb/models/post";
-import { IUser } from "@/types/user";
+import { IUserLimited } from "@/mongodb/models/user";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
@@ -91,8 +91,8 @@ export async function POST(request: Request) {
       );
     }
 
-    const follower: IUser = followerData.user;
-    const following: IUser = followingData.user;
+    const follower: IUserLimited = followerData.user;
+    const following: IUserLimited = followingData.user;
 
     // Add follower relationship
     const follow = await Followers.follow(follower, following);

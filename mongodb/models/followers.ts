@@ -1,10 +1,10 @@
-import { IUser } from "@/types/user";
 import mongoose, { Schema, Document, Model, models } from "mongoose";
 import { toast } from "sonner";
+import { IUserLimited } from "./user";
 
 export interface IFollowersBase {
-  follower: IUser;
-  following: IUser;
+  follower: IUserLimited;
+  following: IUserLimited;
 }
 
 // Define the document methods (for each instance of a follower relationship)
@@ -23,7 +23,7 @@ export interface IFollowers
 
 // Define the static methods
 interface IFollowersStatics {
-  follow(follower: IUser, following: IUser): Promise<IFollowers>;
+  follow(follower: IUserLimited, following: IUserLimited): Promise<IFollowers>;
   getAllFollowers(userId: string): Promise<IFollowers[]>;
   getAllFollowing(userId: string): Promise<IFollowers[]>;
 }
@@ -54,16 +54,16 @@ const FollowersSchema = new Schema<IFollowers>(
 
 FollowersSchema.methods.unfollow = async function () {
   try {
-    await this.deleteOne({ _id: this._id });
+    await this.deleteOne();
   } catch (error) {
-    console.log("error when unfollowing", error);
+    console.log("Error while unfollowing", error);
   }
 };
 
 // Static Method: Follow a User
 FollowersSchema.statics.follow = async function (
-  follower: IUser,
-  following: IUser
+  follower: IUserLimited,
+  following: IUserLimited
 ) {
   try {
     const existingFollow = await this.findOne({
@@ -80,6 +80,7 @@ FollowersSchema.statics.follow = async function (
     return follow;
   } catch (error) {
     console.error("Error following user", error);
+    throw error;
   }
 };
 
@@ -87,14 +88,15 @@ FollowersSchema.statics.follow = async function (
 FollowersSchema.statics.getAllFollowers = async function (userId: string) {
   try {
     const followers = await this.find({ "following.userId": userId }).lean();
-    return followers.map((follow: IFollowers) => ({
-      follower: follow.follower.userId,
-      followerImage: follow.follower.userImage,
-      followerFirstName: follow.follower.firstName,
-      followerLastName: follow.follower.lastName,
+    return followers?.map((follow: IFollowers) => ({
+      follower: follow?.follower?.userId,
+      followerImage: follow?.follower?.userImage,
+      followerFirstName: follow?.follower?.firstName,
+      followerLastName: follow?.follower?.lastName,
     }));
   } catch (error) {
-    console.log("Error fetching followers", error);
+    console.error("Error fetching followers", error);
+    return [];
   }
 };
 
@@ -102,14 +104,15 @@ FollowersSchema.statics.getAllFollowers = async function (userId: string) {
 FollowersSchema.statics.getAllFollowing = async function (userId: string) {
   try {
     const following = await this.find({ "follower.userId": userId }).lean();
-    return following.map((follow: IFollowers) => ({
-      following: follow.following.userId,
-      followingImage: follow.following.userImage,
-      followingFirstName: follow.following.firstName,
-      followingLastName: follow.following.lastName,
+    return following?.map((follow: IFollowers) => ({
+      following: follow?.following?.userId,
+      followingImage: follow?.following?.userImage,
+      followingFirstName: follow?.following?.firstName,
+      followingLastName: follow?.following?.lastName,
     }));
   } catch (error) {
     console.log("Error fetching following", error);
+    return [];
   }
 };
 

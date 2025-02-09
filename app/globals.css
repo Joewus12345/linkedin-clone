@@ -24,15 +24,7 @@ html {
   }
 
   .postButton {
-    @apply flex justify-center flex-1  flex-col sm:flex-row;
-  }
-
-  .icon:active {
-    @apply text-blue-500;
-  }
-
-  .icon svg:active {
-    @apply fill-blue-500 stroke-blue-500;
+    @apply flex justify-center flex-1 flex-col sm:flex-row;
   }
 }
 

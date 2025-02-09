@@ -1,9 +1,9 @@
-import { IUser } from "@/types/user";
 import mongoose, { Schema, Document, models, Model } from "mongoose";
 import { Comment, IComment, ICommentBase } from "./comment";
+import { IUserLimited } from "./user";
 
 export interface IPostBase {
-  user: IUser;
+  user: IUserLimited;
   text: string;
   imageUrl?: string;
   comments?: IComment[];

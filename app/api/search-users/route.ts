@@ -1,15 +1,27 @@
 import connectDB from "@/mongodb/db";
 import { Post } from "@/mongodb/models/post";
-import { Followers } from "@/mongodb/models/followers";
+import { User } from "@/mongodb/models/user";
 import { NextResponse } from "next/server";
 import NodeCache from "node-cache";
 import { auth } from "@clerk/nextjs/server";
+import mongoose from "mongoose";
 
-interface User {
+interface UserResult {
   userId: string;
-  firstName?: string;
+  firstName: string;
   lastName?: string;
-  userImage?: string;
+  userImage: string;
+}
+
+interface PostResult {
+  _id: string;
+  text: string;
+  user: {
+    userId: string;
+    firstName: string;
+    lastName?: string;
+    userImage: string;
+  };
 }
 
 const cache = new NodeCache({ stdTTL: 60 * 5 }); // Cache results for 5 minutes
@@ -35,84 +47,54 @@ export async function GET(request: Request) {
       return NextResponse.json(cachedResults);
     }
 
-    // Fetch unique users from posts collection
-    const postUsers = await Post.aggregate([
-      {
-        $match: {
-          $or: [
-            { "user.firstName": { $regex: query, $options: "i" } },
-            { "user.lastName": { $regex: query, $options: "i" } },
-          ],
-        },
-      },
-      {
-        $group: {
-          _id: "$user.userId",
-          userId: { $first: "$user.userId" },
-          firstName: { $first: "$user.firstName" },
-          lastName: { $first: "$user.lastName" },
-          userImage: { $first: "$user.userImage" },
-        },
-      },
-      { $limit: 5 },
-    ]);
+    // Search Users in `User` model
+    const users = await User.find({
+      $or: [
+        { firstName: { $regex: query, $options: "i" } },
+        { lastName: { $regex: query, $options: "i" } },
+      ],
+    })
+      .select("userId firstName lastName userImage")
+      .lean();
 
-    // Fetch unique users from followers collection
-    const followerUsers = await Followers.aggregate([
-      {
-        $lookup: {
-          from: "followers",
-          localField: "follower",
-          foreignField: "userId",
-          as: "followerData",
-        },
-      },
-      {
-        $lookup: {
-          from: "followers",
-          localField: "following",
-          foreignField: "userId",
-          as: "followingData",
-        },
-      },
-      {
-        $project: {
-          userId: "$follower",
-          firstName: "$followerData.firstName",
-          lastName: "$followerData.lastName",
-          userImage: "$followerData.userImage",
-        },
-      },
-      {
-        $match: {
-          $or: [
-            { firstName: { $regex: query, $options: "i" } },
-            { lastName: { $regex: query, $options: "i" } },
-          ],
-        },
-      },
-      { $limit: 5 },
-    ]);
+    // Ensure the data matches the UserResult type
+    const formattedUsers: UserResult[] = users.map((user) => ({
+      userId: user.userId,
+      firstName: user.firstName,
+      lastName: user.lastName || "",
+      userImage: user.userImage || "",
+    }));
 
-    // Merge results and remove duplicates
-    const mergedResults = [...postUsers, ...followerUsers].reduce<User[]>(
-      (acc, user) => {
-        if (!acc.some((u) => u.userId === user.userId)) {
-          acc.push(user);
-        }
-        return acc;
+    // Search Posts in `Post` model
+    const posts = await Post.find({
+      text: { $regex: query, $options: "i" },
+    })
+      .select("_id text user")
+      .populate("user", "userId firstName lastName userImage")
+      .lean();
+
+    // Ensure `_id` is converted to a string & matches PostResult type
+    const formattedPosts: PostResult[] = posts.map((post) => ({
+      _id: (post._id as mongoose.Types.ObjectId).toString(), // Convert ObjectId to string
+      text: post.text,
+      user: {
+        userId: post.user.userId,
+        firstName: post.user.firstName,
+        lastName: post.user.lastName || "",
+        userImage: post.user.userImage || "",
       },
-      []
-    );
+    }));
 
-    // Store results in cache
-    cache.set(query, mergedResults);
+    const searchResults = { users: formattedUsers, posts: formattedPosts };
 
-    return NextResponse.json(mergedResults);
+    // Cache results
+    cache.set(query, searchResults);
+
+    return NextResponse.json(searchResults);
   } catch (error) {
-    console.error("Error searching users:", error);
+    console.error("Error searching:", error);
     return NextResponse.json(
-      { error: "An error occurred while searching users" },
+      { error: "An error occurred while searching" },
       { status: 500 }
     );
   }

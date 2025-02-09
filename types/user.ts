@@ -5,6 +5,10 @@ export interface IUser {
   lastName?: string;
 }
 
+export interface IUserExtended extends IUser {
+  email?: string | { address: string; verified: boolean };
+}
+
 export interface Follower {
   follower: string;
   followerFirstName: string;

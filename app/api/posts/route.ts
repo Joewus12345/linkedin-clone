@@ -1,11 +1,11 @@
 import connectDB from "@/mongodb/db";
 import { IPostBase, Post } from "@/mongodb/models/post";
-import { IUser } from "@/types/user";
+import { IUserLimited } from "@/mongodb/models/user";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export interface AddPostRequestBody {
-  user: IUser;
+  user: IUserLimited;
   text: string;
   imageUrl?: string | null;
 }

@@ -1,9 +1,11 @@
 import connectDB from "@/mongodb/db";
-import { Post } from "@/mongodb/models/post";
+import { User } from "@/mongodb/models/user";
 import { Followers } from "@/mongodb/models/followers";
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 
 export async function GET(request: Request) {
+  auth.protect();
   try {
     await connectDB();
 
@@ -17,34 +19,45 @@ export async function GET(request: Request) {
       );
     }
 
-    // Fetch the list of users the current user is following
+    // Fetch following users
     const following = await Followers.find({
       "follower.userId": currentUserId,
     }).select("following");
 
     const followingIds = following.map((f) => f.following.userId.toString());
 
-    // Fetch all users and calculate their post/comment counts
-    const users = await Post.aggregate([
+    // Fetch all users and their post & comment count
+    const users = await User.aggregate([
       {
-        $group: {
-          _id: "$user.userId", // Group by userId
-          postCount: { $sum: 1 }, // Count posts
-          commentCount: { $sum: { $size: "$comments" } }, // Count comments
-          userImage: { $first: "$user.userImage" }, // Get user image
-          firstName: { $first: "$user.firstName" }, // Get first name
-          lastName: { $first: "$user.lastName" }, // Get last name
+        $lookup: {
+          from: "posts",
+          localField: "userId",
+          foreignField: "user.userId",
+          as: "userPosts",
+        },
+      },
+      {
+        $lookup: {
+          from: "comments",
+          localField: "userId",
+          foreignField: "user.userId",
+          as: "userComments",
+        },
+      },
+      {
+        $project: {
+          _id: "$userId",
+          userImage: 1,
+          firstName: 1,
+          lastName: 1,
+          postCount: { $size: "$userPosts" }, // Count user's posts
+          commentCount: { $size: "$userComments" }, // Count user's comments
+          isFollowing: { $in: ["$userId", followingIds] },
         },
       },
     ]);
 
-    // Add `isFollowing` to each user based on the following list
-    const enrichedUsers = users.map((user) => ({
-      ...user,
-      isFollowing: followingIds.includes(user._id.toString()),
-    }));
-
-    return NextResponse.json(enrichedUsers);
+    return NextResponse.json(users);
   } catch (error) {
     return NextResponse.json(
       { error: `An error occurred while fetching users: ${error}` },

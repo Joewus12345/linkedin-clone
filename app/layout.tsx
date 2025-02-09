@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
+import UserInitializer from "@/components/UserInitializer";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,6 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
+      <UserInitializer />
       <html lang="en" className="scrollbar-hide">
         <body className="min-h-screen flex flex-col">
           {/* Toaster */}

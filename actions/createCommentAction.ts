@@ -3,7 +3,7 @@
 import { AddCommentRequestBody } from "@/app/api/posts/[post_id]/comments/route";
 import { ICommentBase } from "@/mongodb/models/comment";
 import { Post } from "@/mongodb/models/post";
-import { IUser } from "@/types/user";
+import { IUserDocument, User } from "@/mongodb/models/user";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { toast } from "sonner";
@@ -25,12 +25,18 @@ export async function createCommentAction(postId: string, formData: FormData) {
     throw new Error("User not authenticated");
   }
 
-  const userDB: IUser = {
-    userId: user.id,
-    userImage: user.imageUrl,
-    firstName: user.firstName || "",
-    lastName: user.lastName || "",
-  };
+  const userDB: IUserDocument | null = await User.findOne({ userId: user.id });
+
+  if (userDB) {
+    userDB.userImage = user.imageUrl;
+    userDB.firstName = user.firstName || "";
+    userDB.lastName = user.lastName || "";
+  }
+
+  if (!userDB) {
+    toast.error("User not found in database");
+    throw new Error("User not found in database");
+  }
 
   const body: AddCommentRequestBody = {
     user: userDB,

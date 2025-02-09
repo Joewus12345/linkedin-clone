@@ -7,10 +7,10 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Image from "next/image";
-import { IUser } from "@/types/user";
+import { IUserLimited } from "@/mongodb/models/user";
 
 interface IProfile {
-  userId: IUser["userId"];
+  userId: IUserLimited["userId"];
   userImage: string;
   firstName: string;
   lastName: string;
@@ -18,6 +18,7 @@ interface IProfile {
   commentCount: number;
   followersCount: number;
   followingCount: number;
+  isFollowing: boolean;
 }
 
 interface IPost {
@@ -27,12 +28,12 @@ interface IPost {
   createdAt: string;
 }
 
-export default function ProfilePage({ userId }: { userId: IUser["userId"] }) {
+export default function ProfilePage({ userId }: { userId: IUserLimited["userId"] }) {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [profile, setProfile] = useState<IProfile | null>(null);
   const [posts, setPosts] = useState<IPost[]>([]);
-  const [isFollowing, setIsFollowing] = useState<boolean>();
+  const [isFollowing, setIsFollowing] = useState<boolean | null>();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -51,7 +52,8 @@ export default function ProfilePage({ userId }: { userId: IUser["userId"] }) {
         setProfile(data);
         setIsFollowing(data.isFollowing);
       } else {
-        toast.error(data.error || "Failed to fetch user profile");
+        toast.error("Failed to fetch user profile");
+        console.log(data.error)
         router.push("/");
       }
     } catch (error) {
@@ -71,6 +73,7 @@ export default function ProfilePage({ userId }: { userId: IUser["userId"] }) {
         setPosts(data);
       } else {
         toast.error("Failed to fetch user posts");
+        console.error(data.error);
       }
     } catch (error) {
       console.error("Error fetching user posts:", error);
@@ -82,7 +85,7 @@ export default function ProfilePage({ userId }: { userId: IUser["userId"] }) {
 
     // Immediately update state
     setIsFollowing(true);
-    setProfile((prevProfile) => prevProfile ? { ...prevProfile, followersCount: prevProfile.followersCount + 1 } : null);
+    setProfile((prev) => prev ? { ...prev, followersCount: prev.followersCount + 1 } : null);
 
     try {
       const response = await fetch(`/api/followers`, {
@@ -115,9 +118,9 @@ export default function ProfilePage({ userId }: { userId: IUser["userId"] }) {
 
     // Immediately update state
     setIsFollowing(false);
-    setProfile((prevProfile) =>
-      prevProfile
-        ? { ...prevProfile, followersCount: Math.max(prevProfile.followersCount - 1, 0) }
+    setProfile((prev) =>
+      prev
+        ? { ...prev, followersCount: Math.max(prev.followersCount - 1, 0) }
         : null
     );
 

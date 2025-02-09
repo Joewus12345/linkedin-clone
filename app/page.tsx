@@ -20,7 +20,9 @@ export default async function Home() {
         {/* UserInformation */}
         <UserInformation posts={posts} />
 
-        <hr className="mb-2 border-gray-300 md:mr-6" />
+        <SignedIn>
+          <hr className="mb-2 border-gray-300 md:mr-6" />
+        </SignedIn>
 
         {/* Followers and Following */}
         <SignedIn>

@@ -151,18 +151,22 @@ function FollowersFollowing() {
               following.map((followed: Following) => (
                 <div
                   key={followed.following}
-                  className="flex flex-wrap items-center space-x-2 p-2 border m-2 rounded-lg space-y-2"
+                  className="flex flex-wrap items-center justify-between space-x-2 border p-2 rounded-lg m-2"
                 >
-                  <Avatar>
-                    <AvatarImage
-                      src={followed.followingImage || "/default-avatar.png"}
-                    />
-                    <AvatarFallback>
-                      {followed.followingFirstName?.charAt(0)}
-                      {followed.followingLastName?.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <a href={`/profile/${followed.following}`} className="hover:underline hover:text-blue-800">{`${followed.followingFirstName} ${followed.followingLastName}`}</a>
+                  <div className="flex items-center space-x-2 p-2">
+                    <Avatar>
+                      <AvatarImage
+                        src={followed.followingImage || "/default-avatar.png"}
+                      />
+                      <AvatarFallback>
+                        {followed.followingFirstName?.charAt(0)}
+                        {followed.followingLastName?.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <a href={`/profile/${followed.following}`} className="hover:underline hover:text-blue-800">
+                      {`${followed.followingFirstName} ${followed.followingLastName}`}
+                    </a>
+                  </div>
                   <Button
                     variant="outline"
                     onClick={() => handleUnfollow(followed.following)}
