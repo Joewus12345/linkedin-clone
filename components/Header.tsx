@@ -299,7 +299,7 @@ function Header() {
 
             {/* Sign In Button if not signed in */}
             <SignedOut>
-              <Button asChild variant="secondary" className="mr-5">
+              <Button asChild variant="secondary" className="mr-2">
                 <SignInButton />
               </Button>
             </SignedOut>
