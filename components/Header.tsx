@@ -299,48 +299,50 @@ function Header() {
 
             {/* Sign In Button if not signed in */}
             <SignedOut>
-              <Button asChild variant="secondary">
+              <Button asChild variant="secondary" className="mr-5">
                 <SignInButton />
               </Button>
             </SignedOut>
 
-            <Sheet>
-              <SheetTrigger asChild>
-                <Menu className="text-2xl cursor-pointer ml-3" />
-              </SheetTrigger>
-              <SheetContent side="left">
-                <SheetHeader>
-                  <SheetTitle>LinkedIn</SheetTitle>
-                </SheetHeader>
-                <Link href="/"
-                  className={`flex flex-1 justify-center items-center px-2 py-2 ${pathname === "/" ? "border rounded-sm border-black text-black" : "text-gray-500 opacity-60"} transition-all duration-300 ease-in-out `}
-                >
-                  <HomeIcon className="h-5 fill-white" />
-                  <p className="text-xs">Home</p>
-                </Link>
+            <SignedIn>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Menu className="text-2xl cursor-pointer ml-3" />
+                </SheetTrigger>
+                <SheetContent side="left">
+                  <SheetHeader>
+                    <SheetTitle>LinkedIn</SheetTitle>
+                  </SheetHeader>
+                  <Link href="/"
+                    className={`flex flex-1 justify-center items-center px-2 py-2 ${pathname === "/" ? "border rounded-sm border-black text-black" : "text-gray-500 opacity-60"} transition-all duration-300 ease-in-out `}
+                  >
+                    <HomeIcon className="h-5 fill-white" />
+                    <p className="text-xs">Home</p>
+                  </Link>
 
-                <Link href="/network"
-                  className={`flex flex-1 justify-center items-center px-2 py-2 ${pathname === "/network" ? "border rounded-sm border-black text-black" : "text-gray-500 opacity-60"} transition-all duration-300 ease-in-out`}
-                >
-                  <UsersIcon className="h-5 fill-white" />
-                  <p className="text-xs">Network</p>
-                </Link>
+                  <Link href="/network"
+                    className={`flex flex-1 justify-center items-center px-2 py-2 ${pathname === "/network" ? "border rounded-sm border-black text-black" : "text-gray-500 opacity-60"} transition-all duration-300 ease-in-out`}
+                  >
+                    <UsersIcon className="h-5 fill-white" />
+                    <p className="text-xs">Network</p>
+                  </Link>
 
-                <div
-                  className={`flex flex-1 justify-center items-center px-2 py-2 text-gray-400 pointer-events-none cursor-not-allowed transition-all duration-300 ease-in-out`}
-                >
-                  <Briefcase className="h-5 fill-white" />
-                  <p className="text-xs">Jobs</p>
-                </div>
+                  <div
+                    className={`flex flex-1 justify-center items-center px-2 py-2 text-gray-400 pointer-events-none cursor-not-allowed transition-all duration-300 ease-in-out`}
+                  >
+                    <Briefcase className="h-5 fill-white" />
+                    <p className="text-xs">Jobs</p>
+                  </div>
 
-                <div
-                  className={`flex flex-1 justify-center items-center px-2 py-2 text-gray-400 pointer-events-none cursor-not-allowed transition-all duration-300 ease-in-out`}
-                >
-                  <MessagesSquare className="h-5 fill-white" />
-                  <p className="text-xs">Messaging</p>
-                </div>
-              </SheetContent>
-            </Sheet>
+                  <div
+                    className={`flex flex-1 justify-center items-center px-2 py-2 text-gray-400 pointer-events-none cursor-not-allowed transition-all duration-300 ease-in-out`}
+                  >
+                    <MessagesSquare className="h-5 fill-white" />
+                    <p className="text-xs">Messaging</p>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </SignedIn>
           </div>
         </div>
       </div>
