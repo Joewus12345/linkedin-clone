@@ -114,7 +114,7 @@ function NetworkPage() {
         {users.map((u) => (
           <div
             key={u._id}
-            className="bg-white shadow-md border rounded-lg overflow-hidden transition-transform transform hover:scale-105 h-80 cursor-pointer"
+            className="bg-white shadow-md border rounded-lg overflow-hidden transition-transform transform sm:hover:scale-105 h-80 cursor-pointer"
           >
             {/* Upper Half: Image */}
             <div
