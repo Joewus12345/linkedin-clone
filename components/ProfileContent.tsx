@@ -214,7 +214,7 @@ export default function ProfilePage({ userId }: { userId: IUserLimited["userId"]
       <div className="mt-6 overflow-y-auto flex-1 scrollbar-hide">
         {posts.length > 0 ? (
           posts.map((post) => (
-            <div key={post._id.toString()} className="mt-3 p-3 border rounded-md">
+            <div key={post._id.toString()} className="mt-3 p-3 border rounded-md cursor-pointer" onClick={() => router.push(`/posts/${post._id}`)}>
               <p>{post.text}</p>
               {post.imageUrl && <Image src={post.imageUrl} alt="Post" className="mt-2 rounded-lg" width={500} height={500} />}
               <p className="text-xs text-gray-500 mt-1">{new Date(post.createdAt).toLocaleString()}</p>

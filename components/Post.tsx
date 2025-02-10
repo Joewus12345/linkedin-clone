@@ -23,7 +23,7 @@ function Post({ post }: { post: IPostDocument }) {
     <div className="bg-white rounded-lg border">
       <div className="p-4 flex space-x-2">
         <div
-          className=" cursor-pointer"
+          className="cursor-pointer"
           onClick={() => router.push(`/profile/${post.user.userId}`)}
         >
           <Avatar>
@@ -37,7 +37,7 @@ function Post({ post }: { post: IPostDocument }) {
 
         <div className="flex justify-between flex-1">
           <div
-            className=" cursor-pointer"
+            className="cursor-pointer"
             onClick={() => router.push(`/profile/${post.user.userId}`)}
           >
             <div className="font-semibold">
@@ -78,7 +78,7 @@ function Post({ post }: { post: IPostDocument }) {
       </div>
 
       <div
-        className=" cursor-pointer"
+        className="cursor-pointer"
         onClick={() => router.push(`/posts/${post._id}`)}
       >
         <p className="px-4 pb-2 mt-2 whitespace-pre-wrap">{post.text}</p>

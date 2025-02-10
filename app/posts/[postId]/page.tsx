@@ -8,6 +8,7 @@ import connectDB from "@/mongodb/db";
 import { Post } from "@/mongodb/models/post";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
+import Link from "next/link";
 
 async function PostPage({ params }: { params: Promise<{ postId: string }> }) {
   // Protect the route with Clerk authentication
@@ -27,7 +28,10 @@ async function PostPage({ params }: { params: Promise<{ postId: string }> }) {
   return (
     <div className="bg-white rounded-lg border sm:m-5 max-w-3xl sm:mx-auto min-h-screen">
       <div className="p-4 flex space-x-2">
-        <div>
+        <Link
+          className="cursor-pointer"
+          href={`/profile/${post.user.userId}`}
+        >
           <Avatar>
             <AvatarImage src={post.user.userImage} />
             <AvatarFallback>
@@ -35,10 +39,13 @@ async function PostPage({ params }: { params: Promise<{ postId: string }> }) {
               {post.user.lastName?.charAt(0)}
             </AvatarFallback>
           </Avatar>
-        </div>
+        </Link>
 
         <div className="flex justify-between flex-1">
-          <div>
+          <Link
+            className="cursor-pointer"
+            href={`/profile/${post.user.userId}`}
+          >
             <div className="font-semibold">
               {post.user.firstName} {post.user.lastName}{" "}
               {isAuthor && (
@@ -55,7 +62,7 @@ async function PostPage({ params }: { params: Promise<{ postId: string }> }) {
             <p className="text-xs text-gray-400">
               <TimeAgo date={new Date(post.createdAt)} />
             </p>
-          </div>
+          </Link>
         </div>
       </div>
 
