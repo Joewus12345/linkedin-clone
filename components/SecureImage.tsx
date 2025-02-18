@@ -29,7 +29,7 @@ export default function SecureImage({ src, alt = "Post Image", width = 500, heig
     fetchImageUrl();
   }, [src]);
 
-  if (!imageUrl) return <p>Loading...</p>;
+  if (!imageUrl) return <p className="px-4 pb-2 mt-2">Loading...</p>;
 
   return <Image src={imageUrl} alt={alt} width={width} height={height} className={className} />;
 }
