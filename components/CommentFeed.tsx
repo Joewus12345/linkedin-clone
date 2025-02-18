@@ -12,7 +12,7 @@ function CommentFeed({ post }: { post: IPostDocument }) {
   const isAuthor = user?.id === post.user.userId
 
   return (
-    <div className="space-y-2 mt-3">
+    <div className="space-y-2 mt-3 mb-2">
       {post.comments?.map((comment) => {
         if (!comment?.user) return null
 

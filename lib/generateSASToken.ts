@@ -24,7 +24,7 @@ const blobServiceClient = new BlobServiceClient(
   sharedKeyCredential
 );
 
-async function generateSASToken() {
+async function generateSASTokenForBlob(blobName: string) {
   const containerClient = blobServiceClient.getContainerClient(containerName);
 
   const permissions = new BlobSASPermissions();
@@ -38,6 +38,7 @@ async function generateSASToken() {
   const sasToken = generateBlobSASQueryParameters(
     {
       containerName: containerClient.containerName,
+      blobName,
       permissions: permissions,
       expiresOn: expiryDate,
     },
@@ -47,4 +48,4 @@ async function generateSASToken() {
   return sasToken;
 }
 
-export default generateSASToken;
+export default generateSASTokenForBlob;

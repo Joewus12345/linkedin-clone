@@ -6,11 +6,11 @@ import { useRouter } from "next/navigation";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import Image from "next/image";
 import { IUserLimited } from "@/mongodb/models/user";
 import PostOptions from "./PostOptions";
 import mongoose from "mongoose";
 import { IPostDocument } from "@/mongodb/models/post";
+import SecureImage from "./SecureImage";
 
 interface IProfile {
   userId: IUserLimited["userId"];
@@ -169,9 +169,17 @@ export default function ProfilePage({ userId }: { userId: IUserLimited["userId"]
     }
   };
 
-  if (isLoading) return <p className="flex items-center justify-center min-h-screen text-center">Loading...</p>;
+  if (isLoading) return (
+    <div className="flex items-center justify-center h-screen">
+      <p className="text-xl text-gray-500">Loading...</p>
+    </div>
+  );
 
-  if (!profile) return <p className="flex items-center justify-center min-h-screen text-center">User not found</p>;
+  if (!profile) return (
+    <div className="flex items-center justify-center h-screen">
+      <p className="text-xl text-gray-500">User not found</p>
+    </div>
+  );
 
   return (
     <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg border shadow-md md:mt-4 flex flex-col mb-0 md:mb-0">
@@ -214,11 +222,13 @@ export default function ProfilePage({ userId }: { userId: IUserLimited["userId"]
       <div className="mt-6 overflow-y-auto flex-1 scrollbar-hide">
         {posts.length > 0 ? (
           posts.map((post) => (
-            <div key={post._id.toString()} className="mt-3 p-3 border rounded-md cursor-pointer" onClick={() => router.push(`/posts/${post._id}`)}>
-              <p>{post.text}</p>
-              {post.imageUrl && <Image src={post.imageUrl} alt="Post" className="mt-2 rounded-lg" width={500} height={500} />}
-              <p className="text-xs text-gray-500 mt-1">{new Date(post.createdAt).toLocaleString()}</p>
-
+            <div key={post._id.toString()} className="mt-3 p-3 border rounded-md">
+              <div className="cursor-pointer"
+                onClick={() => router.push(`/posts/${post._id}`)}>
+                <p>{post.text}</p>
+                {post.imageUrl && <SecureImage src={post.imageUrl} alt="Post" className="mt-2 rounded-lg" width={1000} height={1000} />}
+                <p className="text-xs text-gray-500 mt-1">{new Date(post.createdAt).toLocaleString()}</p>
+              </div>
               {/* PostOptions */}
               <PostOptions post={post} />
             </div>

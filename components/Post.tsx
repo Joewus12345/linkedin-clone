@@ -8,10 +8,10 @@ import ReactTimeago from "react-timeago"
 import { Button } from "./ui/button"
 import { Trash2 } from "lucide-react"
 import deletePostAction from "@/actions/deletePostAction"
-import Image from "next/image"
 import PostOptions from "./PostOptions"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import SecureImage from "./SecureImage"
 
 function Post({ post }: { post: IPostDocument }) {
   const { user } = useUser()
@@ -85,7 +85,7 @@ function Post({ post }: { post: IPostDocument }) {
 
         {/* If image uploaded put it here... */}
         {post.imageUrl && (
-          <Image
+          <SecureImage
             src={post.imageUrl}
             alt="Post Image"
             width={500}

@@ -1,15 +1,14 @@
 "use server";
 
 import { AddPostRequestBody } from "@/app/api/posts/route";
-import generateSASToken, { containerName } from "@/lib/generateSASToken";
+import generateSASTokenForBlob, { containerName } from "@/lib/generateSASToken";
 import connectDB from "@/mongodb/db";
 import { Post } from "@/mongodb/models/post";
 import { IUserDocument, User } from "@/mongodb/models/user";
-import { BlobServiceClient } from "@azure/storage-blob";
+import { BlockBlobClient } from "@azure/storage-blob";
 import { currentUser } from "@clerk/nextjs/server";
 import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
-import { toast } from "sonner";
 
 export default async function createPostAction(formData: FormData) {
   const user = await currentUser();
@@ -19,7 +18,7 @@ export default async function createPostAction(formData: FormData) {
   let image_url: string | undefined = undefined;
 
   if (!user?.id) {
-    toast.error("User not authenticated");
+    console.error("User not authenticated");
     throw new Error("User not authenticated");
   }
 
@@ -33,14 +32,14 @@ export default async function createPostAction(formData: FormData) {
     });
 
     if (!userDB) {
-      toast.error("User not found in database");
+      console.error("User not found in database");
       throw new Error("User not found in database");
     }
 
     if (repostId) {
       const originalPost = await Post.findById(repostId);
       if (!originalPost) {
-        toast.error("Original post not found");
+        console.error("Original post not found");
         throw new Error("Original post not found");
       }
 
@@ -60,28 +59,23 @@ export default async function createPostAction(formData: FormData) {
 
           const accountName = process.env.AZURE_STORAGE_NAME;
 
-          const sasToken = await generateSASToken();
-
-          const blobServiceClient = new BlobServiceClient(
-            `https://${accountName}.blob.core.windows.net?${sasToken}`
-          );
-
-          const containerClient =
-            blobServiceClient.getContainerClient(containerName);
-
           const timestamp = new Date().getTime();
           const file_name = `${randomUUID()}_${timestamp}.png`;
 
-          const blockBlobClient = containerClient.getBlockBlobClient(file_name);
+          const sasToken = await generateSASTokenForBlob(file_name);
+
+          const blockBlobUrl = `https://${accountName}.blob.core.windows.net/${containerName}/${file_name}?${sasToken}`;
+
+          const blockBlobClient = new BlockBlobClient(blockBlobUrl);
 
           const imageBuffer = await image.arrayBuffer();
-          const res = await blockBlobClient.uploadData(imageBuffer);
-          image_url = res._response.request.url;
+          await blockBlobClient.uploadData(imageBuffer);
+
+          image_url = file_name;
 
           console.log("File uploaded successfully!", image_url);
         } catch (error) {
-          toast.error("Failed to upload image");
-          toast.error(`Failed to upload image: ${error}`);
+          console.error(`Failed to upload image: ${error}`);
         }
 
         // 2. create post in database with image
@@ -107,7 +101,6 @@ export default async function createPostAction(formData: FormData) {
     // revalidatePath '/' - home page
     revalidatePath("/");
   } catch (error) {
-    toast.error("Failed to create post");
     console.log("Failed to create post", error);
   }
 

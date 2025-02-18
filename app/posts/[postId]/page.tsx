@@ -1,13 +1,13 @@
 "use server";
 
 import PostOptions from "@/components/PostOptions";
+import SecureImage from "@/components/SecureImage";
 import TimeAgo from "@/components/Timeago";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import connectDB from "@/mongodb/db";
 import { Post } from "@/mongodb/models/post";
 import { currentUser } from "@clerk/nextjs/server";
-import Image from "next/image";
 import Link from "next/link";
 
 async function PostPage({ params }: { params: Promise<{ postId: string }> }) {
@@ -71,7 +71,7 @@ async function PostPage({ params }: { params: Promise<{ postId: string }> }) {
 
         {/* If image uploaded put it here... */}
         {post.imageUrl && (
-          <Image
+          <SecureImage
             src={post.imageUrl}
             alt="Post Image"
             width={500}
