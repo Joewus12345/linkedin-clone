@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@azure/storage-blob": "^12.26.0",
-    "@clerk/nextjs": "^6.9.11",
+    "@clerk/nextjs": "^6.23.3",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.5",
